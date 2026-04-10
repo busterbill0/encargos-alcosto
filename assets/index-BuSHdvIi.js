@@ -3063,8 +3063,16 @@ This typically indicates that your device does not have a healthy Internet conne
         .app-grid {
           display: grid;
           grid-template-columns: 320px 1fr;
+          grid-template-rows: 1fr;
           height: calc(100vh - 61px);
           overflow: hidden;
+        }
+        .sidebar-wrapper {
+          min-height: 0;
+          overflow: hidden;
+        }
+        .main-wrapper {
+          min-height: 0;
         }
         @media (max-width: 768px) {
           .app-grid { grid-template-columns: 1fr; }
