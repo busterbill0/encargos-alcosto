@@ -38,10 +38,7 @@ export default function App() {
     <>
       <Header userName={userName} counts={counts} />
 
-      <div style={{
-        ...styles.app,
-        // En móvil mostramos solo sidebar o detalle
-      }} className={selectedId ? 'detail-open' : ''}>
+      <div className={`app-grid${selectedId ? ' detail-open' : ''}`}>
 
         <div className="sidebar-wrapper">
           <Sidebar
@@ -102,12 +99,6 @@ export default function App() {
 }
 
 const styles = {
-  app: {
-    display: 'grid',
-    gridTemplateColumns: '320px 1fr',
-    height: 'calc(100vh - 61px)',
-    overflow: 'hidden',
-  },
   main: {
     overflowY: 'auto',
     padding: 32,

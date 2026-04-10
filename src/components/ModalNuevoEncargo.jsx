@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { TIENDAS, genId } from '../lib/constants'
+import { useToast } from '../context/ToastContext'
 
 function ProductoRow({ id, onRemove, showRemove }) {
   const [codigo, setCodigo] = useState('')
@@ -44,6 +45,7 @@ function ProductoRow({ id, onRemove, showRemove }) {
 }
 
 export default function ModalNuevoEncargo({ onClose, onCreated }) {
+  const showToast = useToast()
   const [origen, setOrigen] = useState('')
   const [destino, setDestino] = useState('')
   const [notas, setNotas] = useState('')
@@ -76,10 +78,10 @@ export default function ModalNuevoEncargo({ onClose, onCreated }) {
   }
 
   async function handleCrear() {
-    if (!origen || !destino) { alert('Selecciona tiendas'); return }
-    if (origen === destino) { alert('Origen y destino deben ser distintos'); return }
+    if (!origen || !destino) { showToast('⚠️ Selecciona tiendas'); return }
+    if (origen === destino) { showToast('⚠️ Origen y destino deben ser distintos'); return }
     const prods = recogerProductos()
-    if (prods.length === 0) { alert('Añade al menos un producto con código'); return }
+    if (prods.length === 0) { showToast('⚠️ Añade al menos un producto con código'); return }
     setSaving(true)
     try {
       await addDoc(collection(db, 'encargos'), {
@@ -91,6 +93,7 @@ export default function ModalNuevoEncargo({ onClose, onCreated }) {
       })
       onCreated()
       onClose()
+      showToast('📦 Encargo creado correctamente')
     } finally {
       setSaving(false)
     }

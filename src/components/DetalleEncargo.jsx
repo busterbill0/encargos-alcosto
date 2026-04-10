@@ -1,8 +1,11 @@
 import { updateDoc, deleteDoc, doc } from 'firebase/firestore'
 import { db, auth } from '../lib/firebase'
 import { ESTADOS, USUARIOS, formatDate, calcularTotalProducto } from '../lib/constants'
+import { useToast } from '../context/ToastContext'
 
 export default function DetalleEncargo({ enc, onVolver, onDeleted }) {
+  const showToast = useToast()
+
   async function advance() {
     if (!enc || enc.estado >= 3) return
     const user = auth.currentUser
@@ -14,12 +17,14 @@ export default function DetalleEncargo({ enc, onVolver, onDeleted }) {
       repartidoresPasos: { ...(enc.repartidoresPasos || {}), [nuevoEstado]: nombre },
       updatedAt: Date.now(),
     })
+    showToast(`${ESTADOS[nuevoEstado].icon} ${ESTADOS[nuevoEstado].label}`)
   }
 
   async function handleDelete() {
     if (!confirm('¿Eliminar este encargo?')) return
     await deleteDoc(doc(db, 'encargos', enc._docId))
     onDeleted()
+    showToast('🗑️ Encargo eliminado')
   }
 
   const prods = enc.productos?.length > 0
